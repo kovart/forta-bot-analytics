@@ -1,7 +1,7 @@
 {
   "name": "forta-bot-analytics",
   "version": "0.0.1",
-  "description": "Library for semi-automatic calculation of anomaly score",
+  "description": "Library for semi-automatic calculation of the anomaly score for Forta bot alerts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {

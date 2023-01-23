@@ -3,7 +3,7 @@
 ### Description
 A helper library for semi-automatic calculation of the anomaly score for bot alerts.
 
-### Algorithm
+### Sync algorithm
 
 ![Working algorithm](./blob/algorithm.svg)
 

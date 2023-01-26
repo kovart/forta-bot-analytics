@@ -15,7 +15,8 @@
     "build": "tsc && tsc --outDir ./example/src/lib",
     "test": "jest",
     "lint": "eslint src/",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublish": "tsc"
   },
   "keywords": [
     "forta",

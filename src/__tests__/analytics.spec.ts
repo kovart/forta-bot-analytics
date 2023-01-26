@@ -1,5 +1,5 @@
-import { BotAnalytics, BotAnalyticsOptions, BotStats } from './analytics';
-import { IBotStorage } from './storage';
+import { BotAnalytics, BotAnalyticsOptions, BotStats } from '../analytics';
+import { IBotStorage } from '../storage';
 
 const GeneralAlertId = BotAnalytics.GeneralAlertId;
 

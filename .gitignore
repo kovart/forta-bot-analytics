@@ -3,3 +3,4 @@ dist
 forta.config.json
 .idea
 .vscode
+.DS_Store

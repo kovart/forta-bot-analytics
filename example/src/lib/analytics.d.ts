@@ -4,6 +4,7 @@ export declare enum TriggerType {
     Alert = 1
 }
 export type BotAnalyticsOptions = {
+    key?: string;
     defaultAnomalyScore: {
         [key: string]: number;
     };
@@ -30,6 +31,7 @@ export declare class BotAnalytics {
     private firstLocalTimestamp;
     private lastLocalTimestamp;
     private lastSyncTimestamp;
+    private readonly botKey;
     private readonly syncTimeout;
     private readonly maxSyncDelay;
     private readonly observableInterval;

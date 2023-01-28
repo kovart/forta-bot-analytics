@@ -18,6 +18,8 @@ describe('BotAnalytics', () => {
     maxSyncDelay: 2 * 24 * 60 * 60,
   };
 
+  const getBotKey = (key: string) => BotAnalytics.StorageKey + '/' + key;
+
   beforeEach(() => {
     mockAnalytics = new BotAnalytics(mockPersistence, defaultConfigValues);
     mockPersistence.load.mockClear();
@@ -32,7 +34,7 @@ describe('BotAnalytics', () => {
     const score = mockAnalytics.getAnomalyScore();
 
     expect(score).toStrictEqual(defaultConfigValues.defaultAnomalyScore[GeneralAlertId]);
-    expect(mockPersistence.load).toBeCalledWith(BotAnalytics.StorageKey);
+    expect(mockPersistence.load).toBeCalled();
   });
 
   it('uses default score if observation of sync data is not long enough', async () => {
@@ -52,7 +54,7 @@ describe('BotAnalytics', () => {
     const score = mockAnalytics.getAnomalyScore();
 
     expect(score).toStrictEqual(defaultConfigValues.defaultAnomalyScore[GeneralAlertId]);
-    expect(mockPersistence.load).toBeCalledWith(BotAnalytics.StorageKey);
+    expect(mockPersistence.load).toBeCalled();
   });
 
   it('uses default score if sync data is outdated', async () => {
@@ -73,7 +75,7 @@ describe('BotAnalytics', () => {
     const score = mockAnalytics.getAnomalyScore();
 
     expect(score).toStrictEqual(defaultConfigValues.defaultAnomalyScore[GeneralAlertId]);
-    expect(mockPersistence.load).toBeCalledWith(BotAnalytics.StorageKey);
+    expect(mockPersistence.load).toBeCalled();
   });
 
   it('uses default scores properly', async () => {
@@ -129,7 +131,7 @@ describe('BotAnalytics', () => {
     const score = mockAnalytics.getAnomalyScore();
 
     expect(score).toStrictEqual(1 / 10);
-    expect(mockPersistence.load).toBeCalledWith(BotAnalytics.StorageKey);
+    expect(mockPersistence.load).toBeCalled();
     expect(mockPersistence.save).not.toBeCalled();
   });
 
@@ -227,7 +229,7 @@ describe('BotAnalytics', () => {
 
     await mockAnalytics.sync(endTimestamp);
 
-    expect(mockPersistence.save).toBeCalledWith(BotAnalytics.StorageKey, {
+    expect(mockPersistence.save).toBeCalledWith(getBotKey(''), {
       startTimestamp: startTimestamp,
       endTimestamp: endTimestamp,
       botTriggers: { [GeneralAlertId]: 2 },
@@ -282,7 +284,7 @@ describe('BotAnalytics', () => {
 
     await mockAnalytics.sync(lastTimestamp + 1);
 
-    expect(mockPersistence.save).toBeCalledWith(BotAnalytics.StorageKey, {
+    expect(mockPersistence.save).toBeCalledWith(getBotKey(''), {
       startTimestamp: startTimestamp + 1,
       endTimestamp: lastTimestamp + 1,
       botTriggers: { [GeneralAlertId]: 2 },

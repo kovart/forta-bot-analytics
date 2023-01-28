@@ -60,12 +60,13 @@ var BotAnalytics = /** @class */ (function () {
         this.firstLocalTimestamp = -1;
         this.lastLocalTimestamp = -1;
         this.lastSyncTimestamp = -1;
-        var defaultAnomalyScore = opts.defaultAnomalyScore, observableInterval = opts.observableInterval, syncTimeout = opts.syncTimeout, maxSyncDelay = opts.maxSyncDelay, logFn = opts.logFn;
+        var defaultAnomalyScore = opts.defaultAnomalyScore, observableInterval = opts.observableInterval, syncTimeout = opts.syncTimeout, maxSyncDelay = opts.maxSyncDelay, key = opts.key, logFn = opts.logFn;
         this.storage = storage;
         this.syncTimeout = syncTimeout;
         this.maxSyncDelay = maxSyncDelay;
         this.observableInterval = observableInterval;
         this.defaultAnomalyScore = defaultAnomalyScore;
+        this.botKey = BotAnalytics.StorageKey + '/' + (key || '');
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.log = logFn || (function () { });
     }
@@ -163,7 +164,7 @@ var BotAnalytics = /** @class */ (function () {
                             throw new Error(BotAnalytics.TriggerImbalanceErrorCode);
                         if (this.lastSyncTimestamp >= 0 && timestamp - this.lastSyncTimestamp < this.syncTimeout)
                             return [2 /*return*/];
-                        return [4 /*yield*/, this.storage.load(BotAnalytics.StorageKey)];
+                        return [4 /*yield*/, this.storage.load(this.botKey)];
                     case 1:
                         syncStats = _a.sent();
                         this.log('sync()', timestamp, localStats, syncStats);
@@ -193,7 +194,7 @@ var BotAnalytics = /** @class */ (function () {
                             Object.values(localStats.botTriggers).find(function (v) { return v > 0; }))) 
                         /* check if the local stats interval is sufficient */
                         return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.storage.save(BotAnalytics.StorageKey, localStats)];
+                        return [4 /*yield*/, this.storage.save(this.botKey, localStats)];
                     case 2:
                         _a.sent();
                         this.log('Sync data is uploaded successfully');

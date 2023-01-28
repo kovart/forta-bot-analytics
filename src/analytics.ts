@@ -5,6 +5,7 @@ export enum TriggerType {
 }
 
 export type BotAnalyticsOptions = {
+  key?: string;
   defaultAnomalyScore: {
     [key: string]: number;
   };
@@ -34,6 +35,7 @@ export class BotAnalytics {
   private lastLocalTimestamp = -1;
   private lastSyncTimestamp = -1;
 
+  private readonly botKey: string;
   private readonly syncTimeout: number;
   private readonly maxSyncDelay: number;
   private readonly observableInterval: number;
@@ -47,13 +49,14 @@ export class BotAnalytics {
   static readonly NoDefaultScoreErrorCode = 'NoDefaultScoreError';
 
   constructor(storage: IBotStorage<BotStats>, opts: BotAnalyticsOptions) {
-    const { defaultAnomalyScore, observableInterval, syncTimeout, maxSyncDelay, logFn } = opts;
+    const { defaultAnomalyScore, observableInterval, syncTimeout, maxSyncDelay, key, logFn } = opts;
 
     this.storage = storage;
     this.syncTimeout = syncTimeout;
     this.maxSyncDelay = maxSyncDelay;
     this.observableInterval = observableInterval;
     this.defaultAnomalyScore = defaultAnomalyScore;
+    this.botKey = BotAnalytics.StorageKey + '/' + (key || '');
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.log = logFn || (() => {});
   }
@@ -124,7 +127,7 @@ export class BotAnalytics {
     if (this.lastSyncTimestamp >= 0 && timestamp - this.lastSyncTimestamp < this.syncTimeout)
       return;
 
-    const syncStats = await this.storage.load(BotAnalytics.StorageKey);
+    const syncStats = await this.storage.load(this.botKey);
 
     this.log('sync()', timestamp, localStats, syncStats);
 
@@ -156,7 +159,7 @@ export class BotAnalytics {
       /* check if the local stats has at least one non-zero value */
       Object.values(localStats.botTriggers).find((v) => v > 0)
     ) {
-      await this.storage.save(BotAnalytics.StorageKey, localStats);
+      await this.storage.save(this.botKey, localStats);
       this.log('Sync data is uploaded successfully');
     }
 

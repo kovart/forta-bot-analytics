@@ -199,7 +199,10 @@ export class BotAnalytics {
       const alertTriggers = stats.alertTriggers[alertId];
       const botTriggers = stats.botTriggers[alertId];
 
-      if (alertTriggers == null || alertTriggers <= 0) return 1;
+      if (alertTriggers == null || alertTriggers <= 0) {
+        this.log('getAnomalyScore()', 'Zero alert triggers, fallback to default score');
+        return this.defaultAnomalyScore[alertId];
+      }
 
       return alertTriggers / botTriggers;
     }
@@ -210,7 +213,10 @@ export class BotAnalytics {
 
       this.log('getAnomalyScore()', 'Using sync data');
 
-      if (alertTriggers == null || alertTriggers <= 0) return 1;
+      if (alertTriggers == null || alertTriggers <= 0) {
+        this.log('getAnomalyScore()', 'Zero alert triggers, fallback to default score');
+        return this.defaultAnomalyScore[alertId];
+      }
 
       return alertTriggers / botTriggers;
     }

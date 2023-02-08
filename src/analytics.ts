@@ -56,7 +56,7 @@ export class BotAnalytics {
     this.maxSyncDelay = maxSyncDelay;
     this.observableInterval = observableInterval;
     this.defaultAnomalyScore = defaultAnomalyScore;
-    this.botKey = BotAnalytics.StorageKey + '/' + (key || '');
+    this.botKey = BotAnalytics.StorageKey + '#' + (key || '');
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.log = logFn || (() => {});
   }

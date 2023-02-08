@@ -66,7 +66,7 @@ var BotAnalytics = /** @class */ (function () {
         this.maxSyncDelay = maxSyncDelay;
         this.observableInterval = observableInterval;
         this.defaultAnomalyScore = defaultAnomalyScore;
-        this.botKey = BotAnalytics.StorageKey + '/' + (key || '');
+        this.botKey = BotAnalytics.StorageKey + '#' + (key || '');
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         this.log = logFn || (function () { });
     }
@@ -233,16 +233,20 @@ var BotAnalytics = /** @class */ (function () {
             }
             var alertTriggers = stats.alertTriggers[alertId];
             var botTriggers = stats.botTriggers[alertId];
-            if (alertTriggers == null || alertTriggers <= 0)
-                return 1;
+            if (alertTriggers == null || alertTriggers <= 0) {
+                this.log('getAnomalyScore()', 'Zero alert triggers, fallback to default score');
+                return this.defaultAnomalyScore[alertId];
+            }
             return alertTriggers / botTriggers;
         }
         if (this.syncStats && !this.isTriggerImbalance(this.syncStats)) {
             var alertTriggers = this.syncStats.alertTriggers[alertId];
             var botTriggers = this.syncStats.botTriggers[alertId];
             this.log('getAnomalyScore()', 'Using sync data');
-            if (alertTriggers == null || alertTriggers <= 0)
-                return 1;
+            if (alertTriggers == null || alertTriggers <= 0) {
+                this.log('getAnomalyScore()', 'Zero alert triggers, fallback to default score');
+                return this.defaultAnomalyScore[alertId];
+            }
             return alertTriggers / botTriggers;
         }
         this.log('getAnomalyScore()', 'Using default score');
